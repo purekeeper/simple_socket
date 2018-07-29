@@ -14,18 +14,21 @@ int main(int argc, char *argv[])
 {
 	signal(SIGINT, sig_exit);
 
-	tcp.setup("127.0.0.1",11999);
-	int i=0;
-	while(1)
+	tcp.setup("127.0.0.1", 11999);
+	int i = 0;
+	while (1)
 	{
 		srand(time(NULL));
-		string fileSizeStr=tcp.receive();
+		//1.接收图片大小
+		string fileSizeStr = tcp.receive();
+		//2.回复收到大小的确认
 		tcp.Send("file_size_ack");
 		stringstream stream(fileSizeStr);
-		int fileSize=0;
-		stream>>fileSize;
-		tcp.receiveFile(fileSize,i++);
-		//发送接收完确认
+		int fileSize = 0;
+		stream >> fileSize;
+		//3.接收图片
+		tcp.receiveFile(fileSize, i++);
+		//4.发送接收完确认
 		tcp.Send("over");
 		sleep(1);
 	}
