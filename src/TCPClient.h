@@ -11,7 +11,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include <netdb.h> 
+#include <netdb.h>
 #include <vector>
 
 using namespace std;
@@ -26,6 +26,7 @@ class TCPClient
 
   public:
     TCPClient();
+    void receiveFile(int fileSize,int i);
     bool setup(string address, int port);
     bool Send(string data);
     string receive(int size = 4096);

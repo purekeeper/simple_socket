@@ -1,5 +1,5 @@
 #include "TCPClient.h"
-
+#define BUFFER_SIZE 1024
 TCPClient::TCPClient()
 {
 	sock = -1;
@@ -50,7 +50,7 @@ bool TCPClient::setup(string address , int port)
 
 bool TCPClient::Send(string data)
 {
-	if(sock != -1) 
+	if(sock != -1)
 	{
 		if( send(sock , data.c_str() , strlen( data.c_str() ) , 0) < 0)
 		{
@@ -74,10 +74,49 @@ string TCPClient::receive(int size)
 	    	cout << "receive failed!" << endl;
 		return nullptr;
   	}
+  	cout<<"buffer length=="<<strlen(buffer)<<endl;
 	buffer[size-1]='\0';
+	for(int i=0;i<size-1;i++){
+	cout<<buffer[i];}
   	reply = buffer;
   	return reply;
 }
+void TCPClient::receiveFile(int fileSize,int i)
+{
+char b[10];
+sprintf(b,"%d.jpg",i);
+  	const char *file_name = (const char*)&b;
+
+	// 打开文件，准备写入
+	FILE *fp = fopen(file_name, "w");
+	if (NULL == fp)
+	{
+		printf("File:\t%s Can Not Open To Write\n", file_name);
+		return;
+	}
+
+	// 从服务器接收数据到buffer中
+	// 每接收一段数据，便将其写入文件中，循环直到文件接收完并写完为止
+	char buffer[BUFFER_SIZE];
+	bzero(buffer, BUFFER_SIZE);
+	int length = 0;
+	cout<<"receive file----"<<endl;
+	int rest=fileSize;
+	while ((rest) > 0)
+	{
+	length = recv(sock, buffer, BUFFER_SIZE, 0);
+		if (fwrite(buffer, sizeof(char), length, fp) < length)
+		{
+			printf("File:\t%s Write Failed\n", file_name);
+			break;
+		}
+		bzero(buffer, BUFFER_SIZE);
+		rest-=length;
+	}
+	// 接收成功后，关闭文件，关闭socket
+	printf("Receive File:\t%s From Server IP Successful!\n", file_name);
+}
+
 
 string TCPClient::read()
 {

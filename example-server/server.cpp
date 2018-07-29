@@ -29,6 +29,7 @@ int main()
 	tcp.setup(11999);
 	if( pthread_create(&msg, NULL, loop, (void *)0) == 0)
 	{
+	cout<<"3333"<<endl;
 		tcp.receive();
 	}
 	return 0;

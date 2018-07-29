@@ -1,4 +1,4 @@
-#include "TCPServer.h" 
+#include "TCPServer.h"
 
 string TCPServer::Message;
 
@@ -39,8 +39,10 @@ string TCPServer::receive()
 	string str;
 	while(1)
 	{
+	cout<<"6666"<<endl;
 		socklen_t sosize  = sizeof(clientAddress);
-		newsockfd = accept(sockfd,(struct sockaddr*)&clientAddress,&sosize);
+		newsockfd = accept(sockfd,(struct sockaddr*)&clientAddress,&sosize);\
+		cout<<"999"<<endl;
 		str = inet_ntoa(clientAddress.sin_addr);
 		pthread_create(&serverThread,NULL,&Task,(void *)newsockfd);
 	}
@@ -67,4 +69,4 @@ void TCPServer::detach()
 {
 	close(sockfd);
 	close(newsockfd);
-} 
+}
